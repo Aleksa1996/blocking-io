@@ -10,8 +10,6 @@ if ($connection) {
 
 echo "Send message to chat (0 for exit) \n";
 
-
-
 $stdin = fopen('php://stdin', 'r');
 stream_set_blocking($stdin, 0);
 
@@ -30,22 +28,3 @@ do {
     }
 
 } while ($run);
-
-
-// while (true) {
-
-//     do {
-//         $typed = readline("You: ");
-//         $typed = trim($typed);
-//         fwrite($connection, $typed, strlen($typed));
-
-//         while ($msg = fread($connection, 2048)) {
-//             echo "$msg \n";
-//         }
-
-//         $run = $typed != '0';
-//     } while ($run);
-
-//     echo "stopped sending data! \n";
-//     // break;
-// }
