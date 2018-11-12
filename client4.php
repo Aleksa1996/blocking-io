@@ -14,6 +14,12 @@ $stdin = fopen('php://stdin', 'r');
 stream_set_blocking($stdin, 0);
 
 $run = true;
+
+$nick = readline("Enter your nick: ");
+$nick = trim($nick);
+fwrite($connection, $nick, strlen($nick));
+stream_set_blocking($stdin, 0);
+
 do {
 
     $typed = fgets($stdin);

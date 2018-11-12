@@ -118,7 +118,7 @@ class Server
 
     public function handleConnection($connection)
     {
-        $this->connections[(int)$connection] = $connection;
+        $this->connections[(int)$connection] = ['connection' => $connection, 'nick' => ''];
 
         $this->loop->addReadStream($connection, function ($stream) {
             stream_set_blocking($stream, 0);
@@ -135,6 +135,13 @@ class Server
             stream_socket_shutdown($stream, STREAM_SHUT_RDWR);
             fclose($stream);
         } else {
+            //Save nick
+            if (empty($this->connections[(int)$stream]['nick'])) {
+                $this->connections[(int)$stream]['nick'] = $data;
+                $data = 'New user joined with nick: ' . $data;
+            } else {
+                $data = $this->connections[(int)$stream]['nick'] . ": " . $data;
+            }
             $this->broadcastMessage($stream, "$data \n");
         }
     }
@@ -142,9 +149,9 @@ class Server
 
     public function broadcastMessage($from, $message)
     {
-        foreach ($this->connections as $stream) {
-            if ($stream != $from)
-                fwrite($stream, $message);
+        foreach ($this->connections as $connection) {
+            if ($connection['connection'] != $from)
+                fwrite($connection['connection'], trim($message));
         }
     }
 
